@@ -1,0 +1,42 @@
+<div class="p-grid">
+    <div class="p-col-11 p-md-11 p-lg-11 p-nopad">
+        <p-table [value]="value" [rows]="rows" [responsive]="true" [paginator]="true" [resizableColumns]="true" sortMode="single" [selectionMode]="selectionMode" [columns]="selectedColumns" [(selection)]="selectedData" (onRowSelect)="emitSelected($event)" (onRowUnselect)="emitUnselected($event)"
+        [loading]="loading" #pDatatable>
+            <ng-template pTemplate="header" let-colunas>
+                <tr>
+                    <th *ngIf="pDatatable.selectionMode == 'checkbox'" style="width: 3em">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th *ngFor="let col of colunas" pResizableColumn [pSortableColumn]="col.value">
+                        <span [innerHTML]="col.header"></span>
+                        <p-sortIcon [field]="col.value"></p-sortIcon>
+                    </th>
+                </tr>
+                <tr>
+                    <th *ngFor="let col of colunas" pResizableColumn>
+                        <p-columnFilter [field]="col.value" type="text" matchMode="startsWith"></p-columnFilter>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-registro let-colunas="columns">
+                <tr [pSelectableRow]="registro">
+                    <td *ngIf="pDatatable.selectionMode == 'checkbox'">
+                        <p-tableCheckbox [value]="registro"></p-tableCheckbox>
+                    </td>
+                    <td *ngFor="let col of colunas" class="ui-resizable-column">
+                        <span *ngIf="!col.valueTemplate" [innerHTML]="getValues(registro, col.value)"></span>
+                        <ng-template *ngIf="col.valueTemplate" [ngTemplateOutlet]="col.valueTemplate" [ngTemplateOutletContext]="{value: getValues(registro, col.value), rowData: registro, column: col}"></ng-template>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                Nenhum registro encontrado.
+            </ng-template>
+        </p-table>
+    </div>
+    <div class="p-col-1 p-md-1 p-lg-1">
+        <div *ngFor="let button of buttons" class="p-col-12">
+            <button pButton type="button" [icon]="button.icon" [pTooltip]="button.pTooltip" [tooltipPosition]="button.tooltipPosition" [ngStyle]="button.style" [disabled]="button.disabled != undefined ? button.disabled : buttonDisabled" (click)="emitButtonClick(button)"></button>
+        </div>
+    </div>
+</div>

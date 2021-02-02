@@ -1,0 +1,181 @@
+<input hidden type="file" name="fileToUpload" id="fileToUpload" (change)="setFileData($event, musica, 'foto', true)" #fileUpload >
+<input hidden type="file" name="fileToUpload2" id="fileToUpload2" (change)="setFileData($event, rowSelected, 'foto', true)" #fileUpload2 >
+<div class="templates">
+    <div class="p-grid">
+        <p-confirmDialog></p-confirmDialog>
+        <div class="p-col-12">
+            <p-card>
+                <ng-template pTemplate="header">
+                    <h1 style="margin-bottom: 0px;">Gerenciamento de músicas</h1>
+                </ng-template>
+                <div class="p-grid">
+                    <div class="p-col-8 p-offset-2">
+                        <mirante-datatable #datatable [value]="mockMusica" type="memory" rows="5" selectionMode="single" (onRowSelect)="onRowSelect($event)" (onButtonClick)="onButtonClick($event)" >
+                            <mirante-column #column header="Foto" value="foto">
+                                <ng-template #value let-value="value">
+                                    <img src="{{value}}" width="100px" height="100px" style="display: block;border-radius: 50%">
+                                </ng-template>
+                            </mirante-column>
+                            <mirante-column #column header="Nome" value="nome"></mirante-column>
+                            <mirante-column #column header="Gênero" value="genero"></mirante-column>
+                            <mirante-column #column header="Tempo da Música" value="tempoDaMusica"></mirante-column>
+                            <mirante-column #column header="Data de Lançamento" value="dataDeLancamento">
+                                <ng-template #value let-value="value">
+                                    {{value | date: 'dd/MM/yyyy - HH:mm'}}
+                                </ng-template>
+                            </mirante-column>
+                            <mirante-column #column header="Número de Votações" value="numeroDeVotacoes"></mirante-column>
+                            <mirante-button name="criar" icon="pi pi-save" [disabled]="false" [style]="{'background-color': '#218838'}" pTooltip="Criar" tooltipPosition="right" #button></mirante-button>
+                            <mirante-button name="editar" icon="pi pi-pencil" [style]="{'background-color': '#ffc107'}" pTooltip="Editar" tooltipPosition="right" #button></mirante-button>
+                            <mirante-button name="remover" icon="pi pi-trash" [style]="{'background-color': '#dc3545'}" pTooltip="Remover" tooltipPosition="right" #button></mirante-button>
+                            <mirante-button name="detalhar" icon="pi pi-eye" [style]="{'background-color': '#6f42c1'}" pTooltip="Detalhar" tooltipPosition="right" #button></mirante-button>
+                            <mirante-button name="avaliar" icon="pi pi-star" [style]="{'background-color': '#b8d900'}" pTooltip="Avaliar" tooltipPosition="right" #button></mirante-button>
+                        </mirante-datatable>
+                    </div>
+                </div>
+            </p-card>
+        </div>
+    </div>
+</div>
+
+<p-dialog header="Cadastrar Música" [(visible)]="displayCadastrarMusica" [modal]="true" [style]="{'width': '1080px'}" [blockScroll]="true">
+    <div class="p-grid">
+        <div *ngIf="!musica.foto" class="p-col-3">
+            <img src="assets/images/photo_upload.png" width="150px" height="150px" style="display: block;border-radius: 50%" (click)="uploadFile()">
+        </div>
+        <div *ngIf="musica.foto" class="p-col-3">
+            <img [src]="musica.foto" width="150px" height="150px" style="display: block;border-radius: 50%" (click)="uploadFile()">
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Nome</label>
+                <input type="text" [(ngModel)]="musica.nome" pInputText> 
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Tempo da Música</label>
+                <input type="text" [(ngModel)]="musica.tempoDaMusica" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Gênero</label>
+                <input type="text" [(ngModel)]="musica.genero" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Data de Lançamento</label>
+                <p-calendar [(ngModel)]="musica.dataDeLancamento" dateFormat="dd/mm/yy"></p-calendar>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-2 p-offset-10">
+            <button pButton type="button" style="width: 100%;" icon="pi pi-save" routerLink="/" label="Cadastrar" class="p-button-success"></button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog header="Editar Música" [(visible)]="displayEditarMusica" [modal]="true" [style]="{'width': '1080px'}" [blockScroll]="true">
+    <div class="p-grid">
+        <div class="p-col-3">
+            <img [src]="rowSelected.foto" width="150px" height="150px" style="display: block;border-radius: 50%" (click)="uploadFile2()">
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Nome</label>
+                <input type="text" [(ngModel)]="rowSelected.nome" pInputText> 
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Tempo da Música</label>
+                <input type="text" [(ngModel)]="rowSelected.tempoDaMusica" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Gênero</label>
+                <input type="text" [(ngModel)]="rowSelected.genero" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Data de Lançamento</label>
+                <p-calendar [(ngModel)]="rowSelected.dataDeLancamento" dateFormat="dd/mm/yy"></p-calendar>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-2 p-offset-10">
+            <button pButton type="button" style="width: 100%;" icon="pi pi-pencil" label="Editar" class="p-button-warning"></button>
+        </div>
+    </div>
+</p-dialog>
+
+<p-dialog header="Detalhar Música" [(visible)]="displayDetalharMusica" *ngIf="rowSelected" [modal]="true" [style]="{'width': '1080px'}" [blockScroll]="true">
+    <div class="p-grid">
+        <div class="p-col-3">
+            <img [src]="rowSelected.foto" width="150px" height="150px" style="display: block;border-radius: 50%">
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Nome</label>
+                <input type="text" disabled="true" [(ngModel)]="rowSelected.nome" pInputText> 
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Tempo da Música</label>
+                <input type="text" disable="true" [(ngModel)]="rowSelected.tempoDaMusica" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Gênero</label>
+                <input type="text" disable="true" [(ngModel)]="rowSelected.genero" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Data de Lançamento</label>
+                <input type="text" disable="true" [ngModel]="rowSelected.dataDeLancamento | date: 'dd/MM/yyyy'" (ngModelChange)="rowSelected.dataDeLancamento = $event" pInputText>
+            </span>
+        </div>
+    </div>
+    <div class="p-grid">
+        <div class="p-col-3">
+            <span>
+                <label>Número de Votações</label>
+                <input type="text" disabled="true" [(ngModel)]="rowSelected.numeroDeVotacoes" pInputText>
+            </span>
+        </div>
+    </div>
+</p-dialog>
+
